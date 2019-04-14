@@ -1,5 +1,10 @@
-# Mailer
+<p align="center">
+    <a href="https://github.com/zh-efimenko/Mailer/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/zh-efimenko/Mailer.svg"></a>
+    <a href="https://hub.docker.com/r/eefimenko/mailer"><img alt="DockerHub Size" src="https://img.shields.io/microbadger/image-size/image-size/eefimenko/mailer.svg"></a>
+    <a href="https://github.com/zh-efimenko/Mailer/blob/master/LICENSE.txt"><img alt="license" src="https://img.shields.io/github/license/zh-efimenko/Mailer.svg"></a>
+</p>
 
+# Mailer
 
 ## Running
 
