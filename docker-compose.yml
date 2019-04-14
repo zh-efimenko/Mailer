@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  mailer:
+    depends_on:
+      - rabbitmq
+    build:
+      context: .
+      dockerfile: /docker/Dockerfile
+    image: zensoftio/mailer
+    environment:
+      AUTHORIZATION_TOKEN: '&d5yNc6FkoB0'
+      MAIL_USERNAME: 'username@gmail.com'
+      MAIL_PASSWORD: 'password'
+      RABBITMQ_ENABLE: 'true'
+      RABBITMQ_HOST: rabbitmq
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - ./data:/data
