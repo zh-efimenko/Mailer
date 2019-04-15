@@ -13,8 +13,8 @@
 To build and run the application, you will need Java and Docker preinstalled.
 
 ```bash
-$ git clone https://git.zensoft.io/evgeni.efimenko.by/mailer.git
-$ cd mailer
+$ git clone https://github.com/zh-efimenko/Mailer.git
+$ cd Mailer
 $ ./gradlew build
 ```
 * Set up **_AUTHORIZATION_TOKEN_**, your gmail credentinals **_MAIL_USERNAME_**, **_MAIL_PASSWORD_**
@@ -31,7 +31,7 @@ $ docker run -d --name mailer --restart always \
              -e AUTHORIZATION_TOKEN=$AUTHORIZATION_TOKEN \
              -e MAIL_USERNAME=$MAIL_USERNAME \
              -e MAIL_PASSWORD=$MAIL_PASSWORD \
-             zensoftio/mailer
+             eefimenko/mailer
 ```
 
 
