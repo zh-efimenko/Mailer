@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/zh-efimenko/Mailer/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/zh-efimenko/Mailer.svg"></a>
-    <a href="https://hub.docker.com/r/eefimenko/mailer"><img alt="DockerHub Size" src="https://img.shields.io/microbadger/image-size/image-size/eefimenko/mailer.svg"></a>
+    <a href="https://microbadger.com/images/eefimenko/mailer"><img alt="DockerHub Size" src="https://images.microbadger.com/badges/image/eefimenko/mailer.svg"></a>
     <a href="https://github.com/zh-efimenko/Mailer/blob/master/LICENSE.txt"><img alt="license" src="https://img.shields.io/github/license/zh-efimenko/Mailer.svg"></a>
 </p>
 
@@ -55,7 +55,7 @@ services:
     build:
       context: .
       dockerfile: /docker/Dockerfile
-    image: zensoftio/mailer
+    image: eefimenko/mailer
     environment:
       AUTHORIZATION_TOKEN: '&d5yNc6FkoB0'
       MAIL_USERNAME: 'username@gmail.com'
