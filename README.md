@@ -1,3 +1,5 @@
+![Logo](https://github.com/zh-efimenko/Mailer/blob/logo/docs/logo.jpg) 
+
 <p align="center">
     <a href="https://github.com/zh-efimenko/Mailer/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/zh-efimenko/Mailer.svg"></a>
     <a href="https://microbadger.com/images/eefimenko/mailer"><img alt="DockerHub Size" src="https://images.microbadger.com/badges/image/eefimenko/mailer.svg"></a>
