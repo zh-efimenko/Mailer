@@ -4,6 +4,7 @@ import io.zensoft.mailer.component.RabbitMqCondition
 import io.zensoft.mailer.component.RabbitMqListener
 import io.zensoft.mailer.property.RabbitMqProperties
 import io.zensoft.mailer.service.MailService
+import io.zensoft.mailer.service.TemplateService
 import org.springframework.amqp.AmqpRejectAndDontRequeueException
 import org.springframework.amqp.core.*
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer
@@ -25,7 +26,8 @@ import org.springframework.validation.Validator
 class RabbitMqConfig(
         @Qualifier("mvcValidator") private val validator: Validator,
         private val properties: RabbitMqProperties,
-        private val mailService: MailService
+        private val mailService: MailService,
+        private val templateService: TemplateService
 ) : RabbitListenerConfigurer {
 
     @Bean
@@ -60,13 +62,17 @@ class RabbitMqConfig(
      * Configuration of rabbit listener container factory for convert message to json
      */
     @Bean
-    fun rabbitListenerContainerFactory(connectionFactory: ConnectionFactory): SimpleRabbitListenerContainerFactory {
+    fun rabbitListenerContainerFactory(connectionFactory: ConnectionFactory,
+                                       converter: Jackson2JsonMessageConverter): SimpleRabbitListenerContainerFactory {
         val factory = SimpleRabbitListenerContainerFactory()
         factory.setConnectionFactory(connectionFactory)
-        factory.setMessageConverter(Jackson2JsonMessageConverter())
+        factory.setMessageConverter(converter)
         factory.setErrorHandler { throw AmqpRejectAndDontRequeueException(it.message, it) }
         return factory
     }
+
+    @Bean
+    fun converter(): Jackson2JsonMessageConverter = Jackson2JsonMessageConverter()
 
     @Bean
     fun handlerMethodFactory(): DefaultMessageHandlerMethodFactory {
@@ -76,6 +82,6 @@ class RabbitMqConfig(
     }
 
     @Bean
-    fun rabbitMqListener(): RabbitMqListener = RabbitMqListener(mailService)
+    fun rabbitMqListener(): RabbitMqListener = RabbitMqListener(mailService, templateService)
 
 }

@@ -177,14 +177,68 @@ In order to send message you need to create the follow `json`:
     }
   ],
   "subject": "Subject",
+  "message": "message",
+  "type": "{mail-message}"
+}
+```
+
+Response:
+
+```json
+{
+  "status": "{OK|FAIL}"
+}
+```
+
+
+## Sending message by template by RabbitMQ
+
+In order to send message by template you need to create the follow `json`:
+
+```json
+{
+  "from": {
+    "address": "from@mail.ru",
+    "personal": "personal"
+  },
+  "to": [
+    {
+      "address": "to@mail.ru",
+      "recipientType": "{TO|CC|BCC}"
+    }
+  ],
+  "subject": "Subject",
   "template": {
+    "namespace": "Namespace",
     "name": "template.ftl",
     "content": {
       "name": "name",
       "link": "link"
     }
   },
-  "message": "message"
+  "type": "{mail-template}"
+}
+```
+
+Response:
+
+```json
+{
+  "status": "{OK|FAIL}"
+}
+```
+
+
+## Sending template by RabbitMQ
+
+In order to send template you need to create the follow `json`:
+
+```json
+{
+  "namespace": "Namespace",
+  "name": "confirmation.ftl",
+  "body": "base64(body)",
+  "type": "{template}"
 }
 ```
 

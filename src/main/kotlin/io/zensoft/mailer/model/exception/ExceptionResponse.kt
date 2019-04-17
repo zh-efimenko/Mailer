@@ -1,4 +1,4 @@
-package io.zensoft.mailer.domain.exception
+package io.zensoft.mailer.model.exception
 
 import com.fasterxml.jackson.annotation.JsonInclude
 

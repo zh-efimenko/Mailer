@@ -1,20 +1,16 @@
 package io.zensoft.mailer.service
 
-import io.zensoft.mailer.domain.mail.MailRequest
-import org.springframework.web.multipart.MultipartFile
+import io.zensoft.mailer.model.mail.dto.MailDto
+import io.zensoft.mailer.model.mail.dto.TemplateDto
 
 interface MailService {
 
-    fun send(request: MailRequest)
+    fun send(dto: MailDto)
 
 }
 
 interface TemplateService {
 
-    fun add(file: MultipartFile): String
-
-    fun update(file: MultipartFile)
-
-    fun delete(templateName: String)
+    fun addOrUpdate(dto: TemplateDto)
 
 }

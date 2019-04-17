@@ -6,9 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2019-04-17
+### Added
+- Messages of amqp
+- Swagger plugins
+- Sending of templates by RabbitMQ
+
+### Changed
+- Models of http
+- Configuration of RabbitMQ
+- Exceptions
+
 ## [1.0.0] - 2019-04-15
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/zh-efimenko/Mailer/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/zh-efimenko/Mailer/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/zh-efimenko/Mailer/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/zh-efimenko/Mailer/releases/tag/v1.0.0

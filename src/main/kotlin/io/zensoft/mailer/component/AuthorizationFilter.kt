@@ -1,7 +1,7 @@
 package io.zensoft.mailer.component
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.zensoft.mailer.domain.exception.ExceptionResponse
+import io.zensoft.mailer.model.exception.ExceptionResponse
 import io.zensoft.mailer.property.AuthProperties
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpHeaders.CONTENT_TYPE

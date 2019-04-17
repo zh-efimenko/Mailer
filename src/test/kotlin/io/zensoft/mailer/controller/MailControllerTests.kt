@@ -2,23 +2,24 @@ package io.zensoft.mailer.controller
 
 import io.zensoft.mailer.config.ControllerTests
 import io.zensoft.mailer.controller.api.MailController
-import io.zensoft.mailer.domain.mail.MailRequest
-import io.zensoft.mailer.domain.mail.MailRequest.MailTo
-import io.zensoft.mailer.exception.DuplicateTemplateException
+import io.zensoft.mailer.model.mail.MailTo
+import io.zensoft.mailer.model.mail.dto.MailDto
+import io.zensoft.mailer.model.mail.dto.TemplateDto
+import io.zensoft.mailer.model.mail.http.MailRequest
+import io.zensoft.mailer.model.mail.http.TemplateRequest
 import io.zensoft.mailer.service.MailService
 import io.zensoft.mailer.service.TemplateService
 import org.junit.Test
-import org.mockito.BDDMockito.given
 import org.mockito.Mockito.verify
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.HttpMethod.PUT
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.http.MediaType.MULTIPART_FORM_DATA
+import org.springframework.http.MediaType.TEXT_HTML_VALUE
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -53,7 +54,7 @@ class MailControllerTests : ControllerTests() {
 
                 .andExpect(status().isOk)
 
-        verify(mailService).send(request)
+        verify(mailService).send(MailDto(request))
     }
 
     @Test
@@ -104,65 +105,19 @@ class MailControllerTests : ControllerTests() {
     }
 
     @Test
-    fun addTemplateTest() {
-        val multipartFile = MockMultipartFile("template", "template.ftl", MULTIPART_FORM_DATA.type,
+    fun addOrUpdateTemplateTest() {
+        val multipartFile = MockMultipartFile("template", "template.ftl", TEXT_HTML_VALUE,
                 "test".toByteArray())
+        val request = TemplateRequest("namespace", multipartFile)
 
-        mvc.perform(multipart("/api/mail/templates")
-                .file(multipartFile)
+        mvc.perform(multipart("/api/mail/templates/doAddOrUpdate")
+                .file(request.template as MockMultipartFile)
+                .param("namespace", request.namespace)
                 .header(AUTHORIZATION, authProperties.token))
 
                 .andExpect(status().isOk)
 
-        verify(templateService).add(multipartFile)
-    }
-
-    @Test
-    fun addTemplateIfTemplateAlreadyExistsShouldThrowException() {
-        val multipartFile = MockMultipartFile("template", "template.ftl", MULTIPART_FORM_DATA.type,
-                "test".toByteArray())
-        val message = "Template ${multipartFile.originalFilename} already exists!"
-
-        given(templateService.add(multipartFile)).willThrow(DuplicateTemplateException(message))
-
-        mvc.perform(multipart("/api/mail/templates")
-                .file(multipartFile)
-                .header(AUTHORIZATION, authProperties.token))
-
-                .andExpect(status().isBadRequest)
-                .andExpect(content().json("""
-                    {
-                      "status": ${BAD_REQUEST.value()},
-                      "message": "$message"
-                    }
-                """.trimIndent(), true))
-    }
-
-    @Test
-    fun updateTemplateTest() {
-        val multipartFile = MockMultipartFile("template", "template.ftl", MULTIPART_FORM_DATA.type,
-                "test".toByteArray())
-
-        mvc.perform(multipart("/api/mail/templates")
-                .file(multipartFile)
-                .with { request -> request.apply { method = PUT.name } }
-                .header(AUTHORIZATION, authProperties.token))
-
-                .andExpect(status().isOk)
-
-        verify(templateService).update(multipartFile)
-    }
-
-    @Test
-    fun deleteTemplateTest() {
-        val fileName = "template.ftl"
-
-        mvc.perform(delete("/api/mail/templates/$fileName")
-                .header(AUTHORIZATION, authProperties.token))
-
-                .andExpect(status().isOk)
-
-        verify(templateService).delete(fileName)
+        verify(templateService).addOrUpdate(TemplateDto(request))
     }
 
 }

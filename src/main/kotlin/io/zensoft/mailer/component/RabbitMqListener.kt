@@ -1,28 +1,35 @@
 package io.zensoft.mailer.component
 
-import io.zensoft.mailer.domain.mail.MailRequest
-import io.zensoft.mailer.domain.mail.MailResponse
-import io.zensoft.mailer.domain.mail.MailResponse.Status.FAIL
-import io.zensoft.mailer.domain.mail.MailResponse.Status.OK
-import io.zensoft.mailer.exception.MailException
+import io.zensoft.mailer.model.mail.amqp.*
+import io.zensoft.mailer.model.mail.amqp.Response.Status.FAIL
+import io.zensoft.mailer.model.mail.amqp.Response.Status.OK
+import io.zensoft.mailer.model.mail.dto.MailDto
+import io.zensoft.mailer.model.mail.dto.TemplateDto
 import io.zensoft.mailer.service.MailService
+import io.zensoft.mailer.service.TemplateService
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.messaging.handler.annotation.Payload
 import javax.validation.Valid
 
 class RabbitMqListener(
-        private val mailService: MailService
+        private val mailService: MailService,
+        private val templateService: TemplateService
 ) {
 
     @RabbitListener(queues = ["\${rabbitmq.queue}"])
-    fun listen(@Valid @Payload request: MailRequest): MailResponse {
+    fun listen(@Valid @Payload message: Message): Response {
         return try {
-            mailService.send(request)
-            MailResponse(OK)
-        } catch (e: MailException) {
+            when (message) {
+                is MailMessage -> mailService.send(MailDto(message))
+                is MailTemplateMessage -> mailService.send(MailDto(message))
+                is TemplateMessage -> templateService.addOrUpdate(TemplateDto(message))
+            }
+
+            Response(OK)
+        } catch (e: Exception) {
             log.error(e.message, e)
-            MailResponse(FAIL)
+            Response(FAIL, e.message)
         }
     }
 

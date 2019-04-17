@@ -3,20 +3,26 @@ package io.zensoft.mailer.controller.base
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import io.zensoft.mailer.domain.exception.ErrorDto
-import io.zensoft.mailer.domain.exception.ExceptionResponse
-import io.zensoft.mailer.exception.MailException
+import io.zensoft.mailer.exception.MailSendException
+import io.zensoft.mailer.model.exception.ErrorDto
+import io.zensoft.mailer.model.exception.ExceptionResponse
 import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
+import org.springframework.validation.BindException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.multipart.MultipartException
-import java.io.FileNotFoundException
 
 @RestControllerAdvice
 class ExceptionRestControllerAdvice {
+
+    @ResponseStatus(code = BAD_REQUEST)
+    @ExceptionHandler(BindException::class)
+    fun bindExceptionHandler(exception: BindException): ExceptionResponse =
+            ExceptionResponse(BAD_REQUEST.value(), BAD_REQUEST.reasonPhrase,
+                    exception.bindingResult.allErrors.map { ErrorDto(it) })
 
     @ResponseStatus(code = BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -25,18 +31,13 @@ class ExceptionRestControllerAdvice {
                     exception.bindingResult.allErrors.map { ErrorDto(it) })
 
     @ResponseStatus(code = BAD_REQUEST)
-    @ExceptionHandler(MailException::class)
-    fun mailExceptionHandler(exception: MailException): ExceptionResponse =
+    @ExceptionHandler(MailSendException::class)
+    fun mailExceptionHandler(exception: MailSendException): ExceptionResponse =
             ExceptionResponse(BAD_REQUEST.value(), exception.localizedMessage)
 
     @ResponseStatus(code = BAD_REQUEST)
     @ExceptionHandler(MultipartException::class)
     fun multipartExceptionHandler(exception: MultipartException): ExceptionResponse =
-            ExceptionResponse(BAD_REQUEST.value(), exception.message!!)
-
-    @ResponseStatus(code = BAD_REQUEST)
-    @ExceptionHandler(FileNotFoundException::class)
-    fun fileNotFoundExceptionHandler(exception: FileNotFoundException): ExceptionResponse =
             ExceptionResponse(BAD_REQUEST.value(), exception.message!!)
 
     @ResponseStatus(code = BAD_REQUEST)
