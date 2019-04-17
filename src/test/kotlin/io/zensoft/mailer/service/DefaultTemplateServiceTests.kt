@@ -1,6 +1,5 @@
 package io.zensoft.mailer.service
 
-import com.sun.org.apache.xml.internal.security.utils.Base64
 import io.zensoft.mailer.model.mail.dto.TemplateDto
 import io.zensoft.mailer.property.StaticDataProperties
 import org.junit.After
@@ -14,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -42,7 +42,7 @@ class DefaultTemplateServiceTests {
 
     @Test
     fun addOrUpdateTest() {
-        val dto = TemplateDto(NAMESPACE, FILE_NAME, Base64.encode("content".toByteArray()))
+        val dto = TemplateDto(NAMESPACE, FILE_NAME, String(Base64.getEncoder().encode("content".toByteArray())))
 
         templateService.addOrUpdate(dto)
 
