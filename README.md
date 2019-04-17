@@ -1,4 +1,4 @@
-![Logo](https://github.com/zh-efimenko/Mailer/blob/logo/docs/logo.jpg) 
+![Logo](https://github.com/zh-efimenko/Mailer/blob/logo/docs/logo.jpg?raw=true) 
 
 <p align="center">
     <a href="https://github.com/zh-efimenko/Mailer/releases"><img alt="GitHub release" src="https://img.shields.io/github/release/zh-efimenko/Mailer.svg"></a>
